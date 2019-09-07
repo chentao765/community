@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.crypto.Data;
-import java.util.Date;
 import java.util.UUID;
-import java.util.logging.SimpleFormatter;
+
 
 @Controller
 public class AuthorizeController {
