@@ -5,8 +5,8 @@ public class User {
     private String accountId;
     private String name;
     private String token;
-    private String gtmCreate;
-    private String gtmUpdate;
+    private Long gtmCreate;
+    private Long gtmUpdate;
 
     public int getId() {
         return id;
@@ -40,19 +40,19 @@ public class User {
         this.token = token;
     }
 
-    public String getGtmCreate() {
+    public Long getGtmCreate() {
         return gtmCreate;
     }
 
-    public void setGtmCreate(String gtmCreate) {
+    public void setGtmCreate(Long gtmCreate) {
         this.gtmCreate = gtmCreate;
     }
 
-    public String getGtmUpdate() {
+    public Long getGtmUpdate() {
         return gtmUpdate;
     }
 
-    public void setGtmUpdate(String gtmUpdate) {
+    public void setGtmUpdate(Long gtmUpdate) {
         this.gtmUpdate = gtmUpdate;
     }
 }
