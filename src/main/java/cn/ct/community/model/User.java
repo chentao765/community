@@ -10,7 +10,7 @@ public class User {
     private String token;
     private Long gtmCreate;
     private Long gtmUpdate;
-    private String awatat_url;
+    private String avatarUrl;
 
 
 }

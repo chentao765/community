@@ -1,9 +1,10 @@
-package cn.ct.community.model;
+package cn.ct.community.dto;
 
+import cn.ct.community.model.User;
 import lombok.Data;
 
 @Data
-public class Question {
+public class QuestionDTO {
     private Integer id;
     private String title;
     private String descrption;
@@ -14,5 +15,6 @@ public class Question {
     private Integer creator;
     private Long gtmCreate;
     private Long gtmUpdate;
+    private User user;
 
 }

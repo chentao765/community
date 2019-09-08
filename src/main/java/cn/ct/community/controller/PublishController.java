@@ -73,7 +73,7 @@ public class PublishController {
         question.setCommentCounts(0);
         question.setLikeCounts(0);
         question.setViewCounts(0);
-        question.setCreator(user.getName());
+        question.setCreator(user.getId());
         question.setDescrption(descrption);
         question.setTag(tag);
         System.out.println(System.currentTimeMillis());

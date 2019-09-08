@@ -49,8 +49,9 @@ public class AuthorizeController {
             user.setToken(token);
             user.setGtmCreate(System.currentTimeMillis());
             user.setGtmUpdate(user.getGtmCreate());
+            user.setAvatarUrl(githubUser.getAvatarUrl());
             userMapper.addUser(user);
-            //添加到cookie
+            //添加到cookie/
             Cookie cookie=new Cookie("token",token);
             response.addCookie(cookie);
             return "redirect:/";
