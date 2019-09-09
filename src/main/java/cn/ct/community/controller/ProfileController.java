@@ -28,20 +28,7 @@ public class ProfileController {
     public String profile(Model model, @PathVariable(value = "action") String action, HttpServletRequest request,
                           @RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "size", defaultValue = "5") Integer size) {
 
-        User user = null;
 
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null && cookies.length > 0) {
-            for (Cookie cookie : cookies
-            ) {
-                if (cookie.getName().equals("token")) {
-                    String token = cookie.getValue();
-                    user = userMapper.findByToken(token);
-                    break;
-                }
-
-            }
-        }
         if ("questions".equals(action)) {
             model.addAttribute("section", action);
             model.addAttribute("sectionName", "我的问题");
@@ -49,8 +36,9 @@ public class ProfileController {
             model.addAttribute("section", action);
             model.addAttribute("sectionName", "我的回复");
         }
+        User user = (User) request.getSession().getAttribute("user");
         if (user != null) {
-            PaginationDTO  paginationDTO= questionService.findQuestionById(user.getId(), page, size);
+            PaginationDTO  paginationDTO= questionService.findQuestionByUserId(user.getId(), page, size);
             model.addAttribute("paginationDTO",paginationDTO);
             return "profile";
         }else{

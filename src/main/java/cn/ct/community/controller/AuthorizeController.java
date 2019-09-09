@@ -5,6 +5,7 @@ import cn.ct.community.dto.GithubUser;
 import cn.ct.community.mapper.UserMapper;
 import cn.ct.community.model.User;
 import cn.ct.community.provider.GithubProvider;
+import cn.ct.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,7 @@ public class AuthorizeController {
     private AccessTokenDTO accessTokenDTO;
 
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
     @GetMapping("/callback")
     public String callback(@RequestParam(value = "code")String code, @RequestParam(value = "state") String state,
                            HttpServletRequest request, HttpServletResponse response){
@@ -42,6 +43,7 @@ public class AuthorizeController {
             return "redirect:/";
         }else{
 
+
             User user=new User();
             user.setAccountId(githubUser.getId()+"");
             user.setName(githubUser.getName());
@@ -50,7 +52,9 @@ public class AuthorizeController {
             user.setGtmCreate(System.currentTimeMillis());
             user.setGtmUpdate(user.getGtmCreate());
             user.setAvatarUrl(githubUser.getAvatarUrl());
-            userMapper.addUser(user);
+
+            //创建或者修改user
+            userService.createOrUpdateUser(user);
             //添加到cookie/
             Cookie cookie=new Cookie("token",token);
             response.addCookie(cookie);

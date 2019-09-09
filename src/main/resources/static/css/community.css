@@ -1,6 +1,11 @@
 body{
     letter-spacing: 1px;
 }
+a{
+    text-decoration: none;
+}
+a:hover{text-decoration:none}
+
 .main{
     margin:30px;
     background-color: white;

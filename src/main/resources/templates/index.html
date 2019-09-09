@@ -8,9 +8,6 @@
     <link rel="stylesheet" href="css/community.css">
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/bootstrap.js"></script>
-
-
-
 </head>
 <body>
     <div th:insert="~{navigation :: nav}"></div>
@@ -29,7 +26,9 @@
                         </a>
                     </div>
                     <div class="media-body">
-                        <h4 class="media-heading" th:text="${questionDTO.getTitle()}"></h4>
+                        <a th:href="@{'/question/'+${questionDTO.id}}">
+                            <h4 class="media-heading" th:text="${questionDTO.getTitle()}"></h4>
+                        </a>
                         <span class="font-style">
                             <span th:text="${questionDTO.getCommentCounts()}"></span>次回复 • <span th:text="${questionDTO.getViewCounts()}"></span> 次浏览 • <span th:text="${#dates.format(questionDTO.getGtmCreate(),'yyyy.MM.dd hh:mm:ss')}"></span></span>
                             <br></br>
