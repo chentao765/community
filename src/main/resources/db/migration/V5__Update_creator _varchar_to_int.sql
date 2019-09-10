@@ -1,1 +1,1 @@
-alter table QUESTION alter column CREATOR int;
+alter table QUESTION  alter column CREATOR int

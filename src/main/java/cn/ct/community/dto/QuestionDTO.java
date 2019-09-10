@@ -3,6 +3,8 @@ package cn.ct.community.dto;
 import cn.ct.community.model.User;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class QuestionDTO {
     private Integer id;
@@ -16,5 +18,6 @@ public class QuestionDTO {
     private Long gtmCreate;
     private Long gtmUpdate;
     private User user;
+
 
 }

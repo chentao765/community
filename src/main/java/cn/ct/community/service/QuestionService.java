@@ -5,6 +5,7 @@ import cn.ct.community.dto.PaginationDTO;
 import cn.ct.community.dto.QuestionDTO;
 import cn.ct.community.exception.CustomizeErroCode;
 import cn.ct.community.exception.CustomizeException;
+import cn.ct.community.mapper.QuestionExtMapper;
 import cn.ct.community.mapper.QuestionMapper;
 import cn.ct.community.mapper.UserMapper;
 import cn.ct.community.model.Question;
@@ -26,6 +27,9 @@ public class QuestionService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private QuestionExtMapper questioneExtMapper;
 
     public PaginationDTO findAllQuestion(Integer page, Integer size) {
         PaginationDTO paginationDTO=new PaginationDTO();
@@ -90,7 +94,7 @@ public class QuestionService {
         List<Question> questions = questionMapper.selectByExampleWithRowbounds(questionExample,new RowBounds(offset,size));
         List<QuestionDTO> questionDTOS=new ArrayList<QuestionDTO>();
 
-        //根据creator获取user信息
+
         for (Question question :
                 questions) {
             User user = userMapper.selectByPrimaryKey(question.getCreator());
@@ -118,12 +122,9 @@ public class QuestionService {
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question, questionDTO);
             questionDTO.setUser(user);
-
-
-
-
-
-        return questionDTO;
+            question.setViewCounts(question.getViewCounts()+1);
+            questioneExtMapper.incrViewCount(question);
+            return questionDTO;
     }
 
     public void createOrUpdate(Question question) {
