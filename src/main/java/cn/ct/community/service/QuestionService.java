@@ -1,6 +1,6 @@
 package cn.ct.community.service;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
+
 import cn.ct.community.dto.PaginationDTO;
 import cn.ct.community.dto.QuestionDTO;
 import cn.ct.community.exception.CustomizeErroCode;
@@ -12,13 +12,16 @@ import cn.ct.community.model.Question;
 import cn.ct.community.model.QuestionExample;
 import cn.ct.community.model.User;
 import cn.ct.community.model.UserExample;
+import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionService {
@@ -49,7 +52,9 @@ public class QuestionService {
             page=totalPage;
         }
         int offset=(page-1)*size;
-        List<Question> questions = questionMapper.selectByExampleWithRowbounds(new QuestionExample(),new RowBounds(offset,size));
+        QuestionExample questionExample=new QuestionExample();
+        questionExample.setOrderByClause("gtm_create desc");
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(questionExample,new RowBounds(offset,size));
         List<QuestionDTO> questionDTOS=new ArrayList<QuestionDTO>();
         paginationDTO.setPagination(totalPage,page,size);
 
@@ -111,8 +116,6 @@ public class QuestionService {
 
     public QuestionDTO findQuestionById(int id) {
 
-
-
         //根据creator获取user信息
             Question question=questionMapper.selectByPrimaryKey(id);
             if(question==null){
@@ -137,5 +140,26 @@ public class QuestionService {
              questionMapper.updateByPrimaryKeySelective(question);
 
         }
+    }
+
+    public List<QuestionDTO> findRelativeQuestion(Integer id) {
+        Question question = questionMapper.selectByPrimaryKey(id);
+        String tag=question.getTag();
+        if(StringUtils.isBlank(tag)){
+            return new ArrayList<>();
+        }
+
+        String[] tags=tag.split(",");
+        String regex=Arrays.stream(tags).collect(Collectors.joining("|"));
+        question.setTag(regex);
+        List<Question> questions=null;
+        questions = questioneExtMapper.selectRelativeQuestion(question);
+        List<QuestionDTO> questionDTOS = questions.stream().map(q -> {
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(q, questionDTO);
+            return questionDTO;
+        }).collect(Collectors.toList());
+        return questionDTOS;
+
     }
 }

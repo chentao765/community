@@ -31,5 +31,9 @@
     where id=#{id}
   </update>
 
+  <select id="selectRelativeQuestion" parameterType="cn.ct.community.model.Question" resultType="cn.ct.community.model.Question">
+      select * from question where id!=#{id} and tag REGEXP #{tag}
+  </select>
+
 
 </mapper>

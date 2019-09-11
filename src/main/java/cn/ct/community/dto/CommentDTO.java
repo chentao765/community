@@ -13,5 +13,6 @@ public class CommentDTO {
     private Long gtmUpdate;
     private Integer likeCounts;
     private String content;
+    private Integer commentCounts;
     private User user;
 }

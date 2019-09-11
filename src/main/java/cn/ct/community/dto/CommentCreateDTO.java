@@ -10,5 +10,5 @@ public class CommentCreateDTO {
     private long parentId;
     private String content;
     private int type;
-    private List<Comment> commentlist;
+
 }

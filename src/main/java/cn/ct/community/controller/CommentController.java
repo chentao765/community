@@ -1,7 +1,9 @@
 package cn.ct.community.controller;
 
 import cn.ct.community.dto.CommentCreateDTO;
+import cn.ct.community.dto.CommentDTO;
 import cn.ct.community.dto.ResultDTO;
+import cn.ct.community.enums.CommentTypeEnum;
 import cn.ct.community.exception.CustomizeErroCode;
 import cn.ct.community.model.Comment;
 import cn.ct.community.model.User;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 @Controller
@@ -21,7 +24,6 @@ public class CommentController {
 
     @RequestMapping(value = "/comment",method = RequestMethod.POST)
     public  @ResponseBody ResultDTO post(@RequestBody CommentCreateDTO commentCreateDTO, HttpServletRequest request){
-        System.out.println(commentCreateDTO);
         User user=(User) request.getSession().getAttribute("user");
        if(user==null){
             System.out.println(ResultDTO.errorOf(CustomizeErroCode.USER_NOT_LOGIN));
@@ -33,7 +35,15 @@ public class CommentController {
         comment.setGtmCreate(System.currentTimeMillis());
         comment.setGtmUpdate(comment.getGtmCreate());
         comment.setCommentCreator(user.getId());
+        comment.setCommentCounts(0);
         commentService.addComment(comment);
         return ResultDTO.okOf();
+    }
+
+    @GetMapping("/comment/{id}")
+    @ResponseBody
+    public ResultDTO get(@PathVariable(value = "id") Integer id){
+        List<CommentDTO> commentDTOS = commentService.findCommentById(id, CommentTypeEnum.COMMENT);
+        return ResultDTO.okOf(commentDTOS);
     }
 }

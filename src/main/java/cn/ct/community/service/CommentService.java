@@ -4,10 +4,7 @@ import cn.ct.community.dto.CommentDTO;
 import cn.ct.community.enums.CommentTypeEnum;
 import cn.ct.community.exception.CustomizeErroCode;
 import cn.ct.community.exception.CustomizeException;
-import cn.ct.community.mapper.CommentMapper;
-import cn.ct.community.mapper.QuestionExtMapper;
-import cn.ct.community.mapper.QuestionMapper;
-import cn.ct.community.mapper.UserMapper;
+import cn.ct.community.mapper.*;
 import cn.ct.community.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +27,8 @@ public class CommentService {
     private QuestionExtMapper questionExtMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private CommentExMapper commentExMapper;
     @Transactional
     public void addComment(Comment comment){
         if(comment.getParentId()==null||comment.getParentId()==0){
@@ -40,13 +39,17 @@ public class CommentService {
            throw new CustomizeException(CustomizeErroCode.TYPE_NOT_CORRECT);
         };
 
-        if(comment.getType()==CommentTypeEnum.COMMENT.getType()){
+        if(comment.getType().equals(CommentTypeEnum.COMMENT.getType())){
             //回复评论
             Comment parentComment = commentMapper.selectByPrimaryKey(comment.getParentId());
             if(parentComment==null){
                 throw new CustomizeException(CustomizeErroCode.COMMENT_NOT_FOUND);
             }else{
+                Comment pComment=new Comment();
+                pComment.setId(comment.getParentId());
+                pComment.setCommentCounts(1);
                 commentMapper.insert(comment);
+                commentExMapper.incrCommentCount(pComment);
             }
 
         }else{
@@ -62,14 +65,15 @@ public class CommentService {
 
     }
 
-    public List<CommentDTO> findQuestionCommentById(Integer id) {
+    public List<CommentDTO> findCommentById(Integer id,CommentTypeEnum type) {
         if(id==null||id==0){
             throw new CustomizeException(CustomizeErroCode.QUESTION_NOT_FOUND);
         }else{
             List<CommentDTO> commentDTOS=new ArrayList<>();
             CommentExample commentExample=new CommentExample();
             commentExample.createCriteria().andParentIdEqualTo(id.longValue());
-            commentExample.createCriteria().andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
+            commentExample.createCriteria().andTypeEqualTo(type.getType());
+            commentExample.setOrderByClause("gtm_create desc");
             List<Comment> comments = commentMapper.selectByExample(commentExample);
             if(comments.size()==0){
                 return  commentDTOS;

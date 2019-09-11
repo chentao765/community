@@ -3,12 +3,22 @@ package cn.ct.community.dto;
 import cn.ct.community.exception.CustomizeErroCode;
 import cn.ct.community.exception.CustomizeException;
 
-public class ResultDTO {
+public class ResultDTO<T> {
     private Integer code;
     private String message;
+    private  T data;
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
     public ResultDTO(){};
 
-    public ResultDTO(Integer code, String message) {
+    public ResultDTO(Integer code, String messaged) {
         this.code = code;
         this.message = message;
     }
@@ -53,11 +63,11 @@ public class ResultDTO {
         return new ResultDTO(200,"ok");
     }
 
-    @Override
-    public String toString() {
-        return "ResultDTO{" +
-                "code=" + code +
-                ", message='" + message + '\'' +
-                '}';
+    public static<T>  ResultDTO okOf(T data){
+        ResultDTO resultDTO=new ResultDTO();
+        resultDTO.setCode(200);
+        resultDTO.setMessage("ok");
+        resultDTO.setData(data);
+        return  resultDTO;
     }
 }

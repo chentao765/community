@@ -6,7 +6,8 @@ public enum CustomizeErroCode implements  ICustomizeErrorCode {
     TARGET_NOT_FOUND(2003,"目标问题消失"),
     TYPE_NOT_CORRECT(2004,"评论类型不正确"),
     SYSTEM_ERROR(2005,"系统异常"),
-    COMMENT_NOT_FOUND(2006,"回复的评论不存在");
+    COMMENT_NOT_FOUND(2006,"回复的评论不存在"),
+    CONTENT_NOT_EMPTY(2007,"内容不能为空");
 
 
     private String message;
