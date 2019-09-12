@@ -1,6 +1,7 @@
 package cn.ct.community.controller;
 
 import cn.ct.community.dto.PaginationDTO;
+import cn.ct.community.dto.QuestionDTO;
 import cn.ct.community.mapper.UserMapper;
 import cn.ct.community.model.User;
 import cn.ct.community.service.QuestionService;
@@ -28,7 +29,7 @@ public class IndexController {
 
         //加载查询所有问题
 
-        PaginationDTO paginationDTO = questionService.findAllQuestion(page, size);
+        PaginationDTO<QuestionDTO> paginationDTO = questionService.findAllQuestion(page, size);
 
         model.addAttribute("paginationDTO",paginationDTO);
 

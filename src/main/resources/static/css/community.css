@@ -17,7 +17,8 @@ a:hover{text-decoration:none}
 
 .button{
     float: right;
-    margin-right: 30px;;
+    margin-right: 30px;
+    margin-top: 20px;
 }
 
 .errorMsg{
@@ -77,4 +78,18 @@ a:hover{text-decoration:none}
 .question-img{
     width: 200px;
     border: 1px silver solid;
+}
+
+.publish-tag{
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    line-height: 16px;
+    padding: 2px 5px;
+    font-size: 12px;
+    border-radius: 4px;
+    margin: 4px;
+}
+.publish-tag-content{
+    display: none;
 }

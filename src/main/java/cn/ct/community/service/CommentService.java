@@ -2,6 +2,8 @@ package cn.ct.community.service;
 
 import cn.ct.community.dto.CommentDTO;
 import cn.ct.community.enums.CommentTypeEnum;
+import cn.ct.community.enums.NotificationStatusEnum;
+import cn.ct.community.enums.NotificationTypeEnum;
 import cn.ct.community.exception.CustomizeErroCode;
 import cn.ct.community.exception.CustomizeException;
 import cn.ct.community.mapper.*;
@@ -29,6 +31,8 @@ public class CommentService {
     private UserMapper userMapper;
     @Autowired
     private CommentExMapper commentExMapper;
+    @Autowired
+    private NotificationMapper notificationMapper;
     @Transactional
     public void addComment(Comment comment){
         if(comment.getParentId()==null||comment.getParentId()==0){
@@ -50,6 +54,9 @@ public class CommentService {
                 pComment.setCommentCounts(1);
                 commentMapper.insert(comment);
                 commentExMapper.incrCommentCount(pComment);
+                //创建通知
+                CreatNotification(comment, parentComment.getCommentCreator(),parentComment.getParentId().intValue(),NotificationTypeEnum.COMMENT_REPLAY);
+
             }
 
         }else{
@@ -61,8 +68,27 @@ public class CommentService {
                commentMapper.insert(comment);
                question.setCommentCounts(1);
                questionExtMapper.incrCommentCount(question);
+               //创建通知
+               CreatNotification(comment,question.getCreator(),question.getId(),NotificationTypeEnum.QUESTION_REPLAY);
+
         }
 
+    }
+
+    //创建通知
+    public void CreatNotification(Comment comment, long receiver,Integer questionId,NotificationTypeEnum type) {
+        Notification notification=new Notification();
+        notification.setGtmCreate(System.currentTimeMillis());
+        notification.setType(type.getType());
+        notification.setNotifier(comment.getCommentCreator().longValue());
+        notification.setOuterId(comment.getParentId());
+        notification.setReceiver(receiver);
+        notification.setStatus(1);
+        User Notifier = userMapper.selectByPrimaryKey(comment.getCommentCreator());
+        notification.setNotifierName(Notifier.getName());
+        Question question = questionMapper.selectByPrimaryKey(questionId);
+        notification.setOuterTitle(question.getTitle());
+        notificationMapper.insert(notification);
     }
 
     public List<CommentDTO> findCommentById(Integer id,CommentTypeEnum type) {
@@ -99,4 +125,5 @@ public class CommentService {
             return  commentDTOS;
         }
     }
+
 }

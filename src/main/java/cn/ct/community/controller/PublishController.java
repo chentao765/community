@@ -1,6 +1,7 @@
 package cn.ct.community.controller;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
+import cn.ct.community.cache.TagCache;
 import cn.ct.community.dto.QuestionDTO;
 import cn.ct.community.mapper.QuestionMapper;
 import cn.ct.community.mapper.UserMapper;
@@ -29,7 +30,10 @@ public class PublishController {
     private QuestionService questionService;
 
     @GetMapping("/publish")
-    public String publish() {
+    public String publish(Model model) {
+        //传标签
+        TagCache tagCache=new TagCache();
+        model.addAttribute("tagCache",tagCache);
         return "publish";
     }
 
@@ -42,19 +46,26 @@ public class PublishController {
         model.addAttribute("title",title);
         model.addAttribute("descrption",descrption);
         model.addAttribute("tag",tag);
+        TagCache tagCache=new TagCache();
+        model.addAttribute("tagCache",tagCache);
 
 
-        if(title.equals("")&title==""){
+        if(title.equals("")&&title==""){
             model.addAttribute("errorMsg","标题不能为空");
             return "publish";
         }
-        if(descrption.equals("")&descrption==""){
+        if(descrption.equals("")&&descrption==""){
             model.addAttribute("errorMsg","问题描述不能为空");
             return "publish";
         }
 
-        if(tag.equals("")&tag==""){
-            model.addAttribute("errorMsg","标签不能为空");
+        if(tag.equals("")&&tag==""){
+            model.addAttribute("errorMsg","标签为空");
+            return "publish";
+        }
+
+        if(TagCache.isVaild(tag)!=null){
+            model.addAttribute("errorMsg",TagCache.isVaild(tag)+"标签不合法");
             return "publish";
         }
 
@@ -84,6 +95,8 @@ public class PublishController {
     @GetMapping("/publish/{id}")
     public String edit(@PathVariable(value = "id")Integer id,Model model){
         QuestionDTO questionDTO = questionService.findQuestionById(id);
+        TagCache tagCache=new TagCache();
+        model.addAttribute("tagCache",tagCache);
         model.addAttribute("title",questionDTO.getTitle());
         model.addAttribute("descrption",questionDTO.getDescrption());
         model.addAttribute("tag",questionDTO.getTag());

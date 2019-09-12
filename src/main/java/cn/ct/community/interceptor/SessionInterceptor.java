@@ -1,6 +1,9 @@
 package cn.ct.community.interceptor;
 
+import cn.ct.community.enums.NotificationStatusEnum;
+import cn.ct.community.mapper.NotificationMapper;
 import cn.ct.community.mapper.UserMapper;
+import cn.ct.community.model.NotificationExample;
 import cn.ct.community.model.User;
 import cn.ct.community.model.UserExample;
 import jdk.nashorn.internal.parser.Token;
@@ -19,7 +22,8 @@ import java.util.List;
 public class SessionInterceptor implements HandlerInterceptor {
     @Autowired
     private UserMapper userMapper;
-    @Override
+    @Autowired
+    private NotificationMapper notificationMapper;
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
 
@@ -35,6 +39,11 @@ public class SessionInterceptor implements HandlerInterceptor {
                     //放入session
                     if(list!=null&&list.size()>0) {
                         request.getSession().setAttribute("user", list.get(0));
+                        NotificationExample notificationExample=new NotificationExample();
+                        notificationExample.createCriteria().andStatusEqualTo(NotificationStatusEnum.UNREAD.getStatus());
+                        notificationExample.createCriteria().andNotifierEqualTo(list.get(0).getId().longValue());
+                        long notificationCount=notificationMapper.countByExample(notificationExample);
+                        request.getSession().setAttribute("notificationCount",notificationCount);
                     }
                     break;
                 }

@@ -29,7 +29,13 @@
                 </form>
                 <ul class="nav navbar-nav navbar-right">
                     <li th:if="${session.user != null}">
-                        <a href="publish">提问</a>
+                        <a href="/publish">提问</a>
+                    </li>
+                    <li th:if="${session.user != null}">
+                        <a href="/profile/replays">
+                            <span class="badge" th:text="${session.notificationCount}"></span>
+                            最新回复
+                        </a>
                     </li>
                     <li th:if="${session.user == null}">
                         <a href="https://github.com/login/oauth/authorize?client_id=115618a93b2b13719c3f&redirect_uri=http://localhost:8888/callback&scope=user&state=1">登录</a>

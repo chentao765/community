@@ -126,8 +126,21 @@ function collapseComments(data) {
         data.classList.remove("active");
 
     }
+}
+function  showTag() {
+    $("#publish-tag").show();
+}
 
+function Selection(data){
+    var tagVal=data.getAttribute("data-toggle");
+    var tag=$("#tag").val();
+    if(tag.indexOf(tagVal)!=-1){
 
-
-
+    }else{
+        if(tag){
+            $("#tag").val(tag+","+tagVal);
+        }else{
+            $("#tag").val(tagVal);
+        }
+    }
 }

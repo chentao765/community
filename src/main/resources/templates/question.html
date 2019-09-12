@@ -7,10 +7,15 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/community.css">
+    <link rel="stylesheet" href="/css/editormd.preview.css" />
     <script src="/js/jquery-3.2.1.min.js"></script>
     <script src="/js/bootstrap.js"></script>
     <script src="/js/moment.js"></script>
     <script src="/js/community.js"></script>
+    <script src="/js/editormd.min.js"></script>
+    <script src="/js/lib/marked.min.js"></script>
+    <script src="/js/lib/prettify.min.js"></script>
+
 
 </head>
 <body>
@@ -27,7 +32,16 @@
                     </span>
 
                     <hr>
-                    <span th:text="${questionDTO.descrption}"></span>
+                    <div id="question-descrption">
+
+                        <textarea style="display:none;" name="descrption" th:text="${questionDTO.descrption}"></textarea>
+                    </div>
+                    <script type="text/javascript">
+                        $(function() {
+                            editormd.markdownToHTML("question-descrption", {
+                            });
+                        });
+                    </script>
                     <hr>
                     <!--标签-->
                     <div>
@@ -122,7 +136,7 @@
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <h3>我的微信</h3>
-                    <img src="/image/wechat.jpg" class="question-img"/>
+                    <img src="/images/wechat.jpg" class="question-img"/>
                 </div>
                 <hr>
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
